@@ -8,10 +8,8 @@ var mysql = require('mysql');
 
 var PORT = process.env.NODE_ENV || 3000;
 
-app.engine('handlebars', expressHandlebars({defaultLayout: 'main'}));
-app.set('view engine', 'handlebars');
-
 var connection = mysql.createConnection({
+    port : '3000',
     host: 'localhost',
     user: 'root',
     password: '',
@@ -25,12 +23,9 @@ connection.connect(function(err){
     console.log("Connected as id: %s", connection.threadId);
 });
 
-app.get('/', function(req, res){
-    connection.query("SELECT * from burger_table;", function(err, result){
-        res.send(result);
-    })
-});
 
 app.listen(PORT, function (){
     console.log("Listening at %s", PORT);
 });
+
+module.exports = Connection;
