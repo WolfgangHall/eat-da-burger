@@ -1,10 +1,11 @@
 var express = require('express');
-var app = express();
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
-
+var expressHandlebars = require('express-handlebars');
 var mysql = require('mysql');
+var app = express();
 
+app.use(bodyParser.urlencoded({extended: false}));
 
 var PORT = process.env.NODE_ENV || 3000;
 
@@ -18,17 +19,54 @@ var connection = mysql.createConnection({
     database: 'burgers_db'
 });
 
-connection.connect(function(err){
-    if (err) {
-        console.log("Error", err.stack);
-    }
-    console.log("Connected as id: %s", connection.threadId);
+app.get('/', function(req, res){
+    connection.query("SELECT * from burger_table", function(err, result){
+        if(err) {
+            throw err;
+        }
+        var data = {
+            burger: result
+        }
+        res.render('index', data);
+    })
 });
 
-app.get('/', function(req, res){
-    connection.query("SELECT * from burger_table;", function(err, result){
-        res.send(result);
-    })
+app.post('/', function(req, res) {
+  var mySQLQuery = "INSERT INTO burger_table (burger_name) VALUES ('" + req.body.burgerdata + "')";
+
+  connection.query(mySQLQuery, function(err) {
+    if (err) {
+      throw err
+    }
+    res.redirect('/');
+  });
+});
+
+app.get('/delete/:id', function(req, res) {
+  var mySQLQuery = "DELETE FROM burger_table WHERE id=" + req.params.id;
+
+  connection.query(mySQLQuery, function(err) {
+    if (err) {
+      throw err
+    }
+    res.redirect('/');
+  });
+});
+
+app.post('/update/:id', function(req, res) {
+  var mySQLQuery = "UPDATE burger_table SET burger_name = " + connection.escape(req.body.burger) + " WHERE id=" + connection.escape(req.params.id);
+  console.log(mySQLQuery);
+
+  connection.query(mySQLQuery, function(err) {
+    if (err) {
+      throw err
+    }
+    res.redirect('/');
+  });
+});
+
+app.get('/*', function(req, res) {
+  res.redirect('/');
 });
 
 app.listen(PORT, function (){

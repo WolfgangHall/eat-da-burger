@@ -12,7 +12,7 @@ var PORT = process.env.NODE_ENV || 3000;
 
 
 app.get('/', function(req, res){
-    connection.query("SELECT * from burger_table;", function(err, result){
+    connection.query("SELECT * from burger_table", function(err, result){
         var data = {
          burgers: result,
          layout: ''
