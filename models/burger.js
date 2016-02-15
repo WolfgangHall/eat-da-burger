@@ -1,28 +1,26 @@
-var Orm = require('/config/orm.js');
+var orm = require('../config/orm.js');
 
-var express = require('express');
-var app = express();
-var methodOverride = require('method-override');
-var bodyParser = require('body-parser');
+var burgers = {
+    findAllburgers: function(cb) {
+       orm.selectAllBurgers('burger_table', function(res){
+         cb(res)
+     });
+  },
+    insertIntoBurgers: function(cb) {
+        orm.insertIntoBurgers('burger_table', function(res){
+            cb(res);
+        });
+    },
+    deleteFromBurgers: function(cb) {
+        orm.deleteFromBurgers('burger_table', function(res){
+            cb(res);
+        });
+    },
+    updateBurgers: function(cb) {
+        orm.updateBurgers('burger_table', function (res){
+            cb(res);
+        });
+    }
+};
 
-var mysql = require('mysql');
-
-var PORT = process.env.NODE_ENV || 3000;
-
-
-
-
-
-app.get('/', function(req, res){
-
-    var burgerInput = document.getElementById('burgerInput');
-    connection.query("INSERT INTO burger-table (name) VALUES (?)", (burgerInput), function(err, result){
-        var data = {
-           burgers: result,
-           layout: ''
-       }
-   })
-});
-
-
-module.exports = Burger;
+module.exports = burgers;

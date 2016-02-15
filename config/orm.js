@@ -1,23 +1,34 @@
-var express = require('express');
-var app = express();
-var methodOverride = require('method-override');
-var bodyParser = require('body-parser');
+var connection = require('../config/connection.js');
 
-var mysql = require('mysql');
-
-var PORT = process.env.NODE_ENV || 3000;
-
-
-
-
-
-app.get('/', function(req, res){
-    connection.query("SELECT * from burger_table", function(err, result){
-        var data = {
-         burgers: result,
-         layout: ''
-        }
-    })
-});
-
-module.exports() = Orm;
+var orm = {
+    selectAllBurgers: function(cb) {
+        var s = 'SELECT * FROM ' + tableInput + ';';
+        connection.query(s, function(err, result) {
+            if (err) throw err;
+            cb(result);
+        });
+    },
+    insertIntoBurgers: function(tableInput, cb) {
+        var s = "INSERT INTO burger_table (burger_name) VALUES ('" + req.body.burgerdata + "')";
+        connection.query(s, function(err, result){
+            if (err) throw err;
+            cb(result);
+        })
+    },
+    deleteFromBurgers: function(tableInput, cb) {
+        var s = "DELETE FROM burger_table WHERE id=" + req.params.id;
+        connection.query(s, function(err, result){
+            if (err) throw err;
+            cb(result);
+        })
+    },
+    updateBurgers: function(tableInput, cb) {
+        var s = "UPDATE burger_table SET burger_name = " + connection.escape(req.body.burger) + " WHERE id=" + connection.escape(req.params.id);
+        connection.query(s, function(err, result){
+            if (err) throw err;
+            cb(result);
+        })
+    }
+};
+    
+module.exports = orm;

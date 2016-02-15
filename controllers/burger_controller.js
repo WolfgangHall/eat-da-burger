@@ -1,6 +1,12 @@
 var express = require('express');
-var Burger = require('/models/burger.js');
+var router = express.Router();
+var thing = require('../models/burger.js');
 
-app.get("/index", function (req, res){
-    
-})
+//get route -> index
+router.get('/index', function(req,res) {
+ thing.findAllthings(function(data){
+  res.render('index', {data});
+ });
+});
+
+module.exports = router;
